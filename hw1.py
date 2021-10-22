@@ -1,6 +1,7 @@
 import argparse
 import sys
 import os.path
+import datetime
 
 def bruteForce(sequence,pattern):
     foundIndex = -1
@@ -215,9 +216,15 @@ for line in file2.readlines():
 
 
 if(algoType == "BF"):
+    startTime = datetime.datetime.now()
     bruteForce(sequence,pattern)
+    endTime = datetime.datetime.now()
+    print ("Time elapsed:", (endTime - startTime).total_seconds()*1000)
 elif(algoType == "KMP"):
+    startTime = datetime.datetime.now()
     print("KMP: ", Kmp(sequence,pattern))
+    endTime = datetime.datetime.now()
+    print("{:.6f}".format((endTime - startTime).total_seconds()*1000))
 elif(algoType == "BM"):
     print("boyer: ", boyerMoore(sequence,pattern))
 elif(algoType == "A"):
