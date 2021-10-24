@@ -16,6 +16,7 @@ def bruteForce(sequence,pattern):
                 else:
                     comparisons += 1
                     if( j >= len(pattern) - 1):
+                        comparisons += 1
                         foundIndex = i
                         return foundIndex, comparisons
             else:
@@ -233,7 +234,7 @@ if(algoType == "BF"):
     result = bruteForce(sequence,pattern)
     endTime = time.time()
 
-    print("pattern was found in query file at position " + str(result[0]))
+    print("pattern was found in query file at position " + str(result[0] + 1))
     print(str(result[1]) + " character comparisons performed.")
     print("Run time was " + str(((endTime - startTime)*1000)) + " ms.")
 elif(algoType == "KMP"):
@@ -241,7 +242,7 @@ elif(algoType == "KMP"):
     result = Kmp(sequence,pattern)
     endTime = time.time()
 
-    print("pattern was found in query file at position " + str(result[0]))
+    print("pattern was found in query file at position " + str(result[0] + 1))
     print(str(result[1]) + " character comparisons performed.")
     print("Run time was " + str(((endTime - startTime)*1000)) + " ms.")
 elif(algoType == "BM"):
@@ -249,7 +250,7 @@ elif(algoType == "BM"):
     result = boyerMoore(sequence,pattern)
     endTime = time.time()
 
-    print("pattern was found in query file at position " + str(result[0]))
+    print("pattern was found in query file at position " + str(result[0] + 1))
     print(str(result[1]) + " character comparisons performed.")
     print("Run time was " + str(((endTime - startTime)*1000)) + " ms.")
 elif(algoType == "A"):
@@ -257,7 +258,7 @@ elif(algoType == "A"):
     resultBF = bruteForce(sequence,pattern)
     endTime = time.time()
 
-    print("pattern was found in query file at position " + str(resultBF[0]))
+    print("pattern was found in query file at position " + str(resultBF[0] + 1))
     print(str(resultBF[1]) + " character comparisons performed.")
     print("Run time was " + str(((endTime - startTime)*1000)) + " ms.")
 
@@ -267,7 +268,7 @@ elif(algoType == "A"):
     resultKMP = Kmp(sequence,pattern)
     endTime = time.time()
 
-    print("pattern was found in query file at position " + str(resultKMP[0]))
+    print("pattern was found in query file at position " + str(resultKMP[0] + 1))
     print(str(resultKMP[1]) + " character comparisons performed.")
     print("Run time was " + str(((endTime - startTime)*1000)) + " ms.")
 
@@ -277,7 +278,7 @@ elif(algoType == "A"):
     resultBM = boyerMoore(sequence,pattern)
     endTime = time.time()
 
-    print("pattern was found in query file at position " + str(resultBM[0]))
+    print("pattern was found in query file at position " + str(resultBM[0] + 1))
     print(str(resultBM[1]) + " character comparisons performed.")
     print("Run time was " + str(((endTime - startTime)*1000)) + " ms.")
 
