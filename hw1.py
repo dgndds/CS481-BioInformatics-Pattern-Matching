@@ -20,55 +20,51 @@ def bruteForce(sequence,pattern):
                         foundIndex = i
                         return foundIndex, comparisons
             else:
-                break    
-                
-        # if(sequence[i: i+len(pattern)] == pattern):
-        #     foundIndex = i
-        #     break
+                break
 
     return foundIndex, comparisons
 
 def KmpFailureGen(pattern):
     failure = [None] * len(pattern)
     failure[0] = 0
-    i = 1
-    j = 0
+    index1 = 1
+    index2 = 0
 
-    while i < len(pattern):
-        if(pattern[i] == pattern[j] ):
-            failure[i] = j +1
-            i = i + 1
-            j = j + 1
-        elif j > 0:
-            j = failure[j-1]
+    while index1 < len(pattern):
+        if(pattern[index1] == pattern[index2] ):
+            failure[index1] = index2 + 1
+            index1 = index1 + 1
+            index2 = index2 + 1
+        elif index2 > 0:
+            index2 = failure[index2-1]
         else:
-            failure[i] = 0
-            i = i + 1
+            failure[index1] = 0
+            index1 = index1 + 1
 
     return failure
 
 def Kmp(sequence,pattern):
     failure = KmpFailureGen(pattern)
-    i = 0
-    j = 0
+    index1 = 0
+    index2 = 0
     comparisons = 0
 
-    while i < len(sequence):
+    while index1 < len(sequence):
         
-        if(sequence[i] == pattern[j]):
+        if(sequence[index1] == pattern[index2]):
             comparisons += 1
-            if j == len(pattern) - 1:
-                return i - j, comparisons
+            if index2 == len(pattern) - 1:
+                return index1 - index2, comparisons
             else:
-                i = i + 1
-                j = j + 1
+                index1 = index1 + 1
+                index2 = index2 + 1
         else:
             comparisons += 1
-            if j > 0:
-                j = failure[j - 1]
+            if index2 > 0:
+                index2 = failure[index2 - 1]
             else:
-                i = i + 1
-                j = 0
+                index1 = index1 + 1
+                index2 = 0
     
     return -1, comparisons
 
@@ -183,7 +179,7 @@ def boyerMoore(sequence,pattern):
                     if(i >= n):
                         break
     
-    return 0,comparisons
+    return -1,comparisons
 
 parser = argparse.ArgumentParser(description="Pattern Matching Program using bruteforce,Knuth-Morris-Pratt, Boyer-Moore Algorithms")
 parser.add_argument("-i", type=str, required=True, help="Path of the FASTA file to be queried")
@@ -191,10 +187,6 @@ parser.add_argument("-o", type=str,required=True, help="Path of the FASTA file c
 parser.add_argument("-a", type=str,required=True, help="A value specifiying the algorithm to be used which are BF, KMP, BM, A")
 
 args = parser.parse_args()
-
-# print(args.i)
-# print(args.o)
-# print(args.a)
 
 file1Path = args.i
 file2Path = args.o
@@ -212,8 +204,8 @@ if(not (algoType == "BF" or  algoType == "KMP" or algoType == "BM" or algoType =
     print(algoType + " is not a valid algorithm type parameter")
     sys.exit()
 
-file1 = open("data.fa") 
-file2 = open("patt.fa")
+file1 = open(file1Path) 
+file2 = open(file2Path)
 
 sequence = ""
 pattern = ""
@@ -234,33 +226,50 @@ if(algoType == "BF"):
     result = bruteForce(sequence,pattern)
     endTime = time.time()
 
-    print("pattern was found in query file at position " + str(result[0] + 1))
+    if(result[0] != -1):
+        print("pattern was found in query file at position " + str(result[0] + 1))
+    else:
+        print("pattern was not found in query file")
+
     print(str(result[1]) + " character comparisons performed.")
-    print("Run time was " + str(((endTime - startTime)*1000)) + " ms.")
+    print("Run time was " + str(int((endTime - startTime)*1000)) + " ms.")
 elif(algoType == "KMP"):
     startTime = time.time()
     result = Kmp(sequence,pattern)
     endTime = time.time()
 
-    print("pattern was found in query file at position " + str(result[0] + 1))
+    if(result[0] != -1):
+        print("pattern was found in query file at position " + str(result[0] + 1))
+    else:
+        print("pattern was not found in query file")
+
     print(str(result[1]) + " character comparisons performed.")
-    print("Run time was " + str(((endTime - startTime)*1000)) + " ms.")
+    print("Run time was " + str(int((endTime - startTime)*1000)) + " ms.")
 elif(algoType == "BM"):
     startTime = time.time()
     result = boyerMoore(sequence,pattern)
     endTime = time.time()
 
-    print("pattern was found in query file at position " + str(result[0] + 1))
+    if(result[0] != -1):
+        print("pattern was found in query file at position " + str(result[0] + 1))
+    else:
+        print("pattern was not found in query file")
+
     print(str(result[1]) + " character comparisons performed.")
-    print("Run time was " + str(((endTime - startTime)*1000)) + " ms.")
+    print("Run time was " + str(int((endTime - startTime)*1000)) + " ms.")
 elif(algoType == "A"):
     startTime = time.time()
     resultBF = bruteForce(sequence,pattern)
     endTime = time.time()
 
-    print("pattern was found in query file at position " + str(resultBF[0] + 1))
+    print("Brute Force:")
+    if(resultBF[0] != -1):
+        print("pattern was found in query file at position " + str(resultBF[0] + 1))
+    else:
+        print("pattern was not found in query file")
+
     print(str(resultBF[1]) + " character comparisons performed.")
-    print("Run time was " + str(((endTime - startTime)*1000)) + " ms.")
+    print("Run time was " + str(int((endTime - startTime)*1000)) + " ms.")
 
     print()
 
@@ -268,9 +277,14 @@ elif(algoType == "A"):
     resultKMP = Kmp(sequence,pattern)
     endTime = time.time()
 
-    print("pattern was found in query file at position " + str(resultKMP[0] + 1))
+    print("Knuth-Morris-Pratt:")
+    if(resultKMP[0] != -1):
+        print("pattern was found in query file at position " + str(resultKMP[0] + 1))
+    else:
+        print("pattern was not found in query file")
+
     print(str(resultKMP[1]) + " character comparisons performed.")
-    print("Run time was " + str(((endTime - startTime)*1000)) + " ms.")
+    print("Run time was " + str(int((endTime - startTime)*1000)) + " ms.")
 
     print()
 
@@ -278,12 +292,19 @@ elif(algoType == "A"):
     resultBM = boyerMoore(sequence,pattern)
     endTime = time.time()
 
-    print("pattern was found in query file at position " + str(resultBM[0] + 1))
+    print("Boyer-Moore:")
+    if(resultBM[0] != -1):
+        print("pattern was found in query file at position " + str(resultBM[0] + 1))
+    else:
+        print("pattern was not found in query file")
+
     print(str(resultBM[1]) + " character comparisons performed.")
-    print("Run time was " + str(((endTime - startTime)*1000)) + " ms.")
+    print("Run time was " + str(int((endTime - startTime)*1000)) + " ms.")
 
     results = [resultBF[1],resultKMP[1],resultBM[1]]
     index = results.index(min(results))
+
+    print()
 
     if(index == 0):
         print("The best algorithm was Brute Force")
@@ -292,22 +313,5 @@ elif(algoType == "A"):
     elif(index == 2):
         print("The best algorithm was Boyer Moore")
 
-
-# f = KmpFailureGen("abaaba")
-
-# print("failure: ", f)
-
-# print("KMP: ", Kmp(sequence,pattern));
-
-# print(goodSuffixOne("ATCACATCATCA"))
-
-#print(badCharacterTable("ATCACATCATCA"))
-
-
-
-
-# print(goodSuffixOne(pattern))
-# print(goodSuffixTwo(pattern))
-#print(goodSuffixTwo(pattern))
 file1.close()
 file2.close()
